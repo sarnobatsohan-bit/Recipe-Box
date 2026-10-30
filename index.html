@@ -30,9 +30,20 @@
             <input type="text" id="recipe-name" name="name" required placeholder="e.g. Creamy Tuscan Chicken">
           </div>
 
-          <div class="form-group">
-            <label for="recipe-time">Cooking Time (minutes)</label>
-            <input type="number" id="recipe-time" name="cookingTime" min="1" required placeholder="e.g. 25">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="recipe-time">Cooking Time (minutes)</label>
+              <input type="number" id="recipe-time" name="cookingTime" min="1" required placeholder="e.g. 25">
+            </div>
+
+            <div class="form-group">
+              <label for="recipe-difficulty">Difficulty</label>
+              <select id="recipe-difficulty" name="difficulty" required>
+                <option value="Easy">Easy</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
           </div>
 
           <div class="form-group">
@@ -82,6 +93,10 @@
           <span class="meta-item">
             <span class="meta-label">Cooking Time:</span>
             <span id="modal-recipe-time" class="meta-value"></span>
+          </span>
+          <span class="meta-item">
+            <span class="meta-label">Difficulty:</span>
+            <span id="modal-recipe-difficulty" class="meta-value badge"></span>
           </span>
         </div>
 

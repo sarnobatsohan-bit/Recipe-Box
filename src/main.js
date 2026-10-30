@@ -1,4 +1,4 @@
-// Recipe Box - v3: Search by recipe name or ingredient
+// Recipe Box - v4: Difficulty badge for recipes
 (function () {
   'use strict';
 
@@ -9,6 +9,7 @@
       id: 'margherita-pizza-1',
       name: 'Classic Margherita Pizza',
       cookingTime: 25,
+      difficulty: 'Medium',
       isFavorite: true,
       ingredients: [
         '1 ball pizza dough (approx. 250g)',
@@ -31,6 +32,7 @@
       id: 'garlic-butter-pasta-2',
       name: 'Garlic Herb Butter Pasta',
       cookingTime: 15,
+      difficulty: 'Easy',
       isFavorite: false,
       ingredients: [
         '250g spaghetti or linguine',
@@ -59,7 +61,13 @@
       if (data) {
         const parsed = JSON.parse(data);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          // Ensure all recipes have a difficulty field
+          return parsed.map(function (item) {
+            if (!item.difficulty) {
+              item.difficulty = 'Medium';
+            }
+            return item;
+          });
         }
       }
     } catch (err) {
@@ -92,8 +100,17 @@
   const modalDeleteBtn = document.getElementById('modal-delete-btn');
   const modalRecipeTitle = document.getElementById('modal-recipe-title');
   const modalRecipeTime = document.getElementById('modal-recipe-time');
+  const modalRecipeDifficulty = document.getElementById('modal-recipe-difficulty');
   const modalIngredientsList = document.getElementById('modal-ingredients-list');
   const modalStepsList = document.getElementById('modal-steps-list');
+
+  // Difficulty badge class helper
+  function getDifficultyClass(difficulty) {
+    const diff = (difficulty || 'Medium').toLowerCase();
+    if (diff === 'easy') return 'badge badge-easy';
+    if (diff === 'hard') return 'badge badge-hard';
+    return 'badge badge-medium';
+  }
 
   // Toggle Favorite
   function toggleFavorite(recipeId) {
@@ -111,7 +128,6 @@
   function getVisibleRecipes() {
     let result = recipes.slice();
 
-    // Filter by search query (name or ingredients, case-insensitive)
     const query = searchQuery.trim().toLowerCase();
     if (query) {
       result = result.filter(function (recipe) {
@@ -123,7 +139,6 @@
       });
     }
 
-    // Sort: favorites first
     return result.sort(function (a, b) {
       if (a.isFavorite === b.isFavorite) {
         return 0;
@@ -196,6 +211,11 @@
       timeBadge.textContent = '⏱ ' + recipe.cookingTime + ' min';
       meta.appendChild(timeBadge);
 
+      const diffBadge = document.createElement('span');
+      diffBadge.className = getDifficultyClass(recipe.difficulty);
+      diffBadge.textContent = recipe.difficulty || 'Medium';
+      meta.appendChild(diffBadge);
+
       card.appendChild(meta);
 
       // Card click opens modal
@@ -225,6 +245,11 @@
     currentDetailRecipeId = recipeId;
     modalRecipeTitle.textContent = recipe.name;
     modalRecipeTime.textContent = recipe.cookingTime + ' minutes';
+
+    if (modalRecipeDifficulty) {
+      modalRecipeDifficulty.className = 'meta-value ' + getDifficultyClass(recipe.difficulty);
+      modalRecipeDifficulty.textContent = recipe.difficulty || 'Medium';
+    }
 
     // Populate Ingredients
     while (modalIngredientsList.firstChild) {
@@ -281,11 +306,13 @@
 
     const nameInput = document.getElementById('recipe-name');
     const timeInput = document.getElementById('recipe-time');
+    const difficultyInput = document.getElementById('recipe-difficulty');
     const ingredientsInput = document.getElementById('recipe-ingredients');
     const stepsInput = document.getElementById('recipe-steps');
 
     const name = nameInput.value.trim();
     const cookingTime = parseInt(timeInput.value, 10);
+    const difficulty = difficultyInput ? difficultyInput.value : 'Medium';
     const rawIngredients = ingredientsInput.value.trim();
     const rawSteps = stepsInput.value.trim();
 
@@ -315,6 +342,7 @@
       id: 'recipe-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6),
       name: name,
       cookingTime: cookingTime,
+      difficulty: difficulty,
       isFavorite: false,
       ingredients: ingredients,
       steps: steps

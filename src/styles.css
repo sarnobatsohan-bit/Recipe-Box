@@ -14,6 +14,14 @@
   --olive-light: #EEF3E6;
   
   --gold: #E5A100;
+  
+  --badge-easy-bg: #E8F5E9;
+  --badge-easy-text: #2E7D32;
+  --badge-medium-bg: #FFF8E1;
+  --badge-medium-text: #B78103;
+  --badge-hard-bg: #FFEBEE;
+  --badge-hard-text: #C62828;
+  
   --text-primary: #292421;
   --text-secondary: #6B625B;
   --text-muted: #8C8279;
@@ -125,6 +133,12 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
 }
 
 .form-group {
@@ -350,6 +364,7 @@ body {
   font-size: 0.85rem;
   color: var(--text-secondary);
   margin-top: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .card-time {
@@ -362,6 +377,32 @@ body {
   border-radius: 20px;
   font-weight: 600;
   font-size: 0.8rem;
+}
+
+/* Difficulty Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+}
+
+.badge-easy {
+  background-color: var(--badge-easy-bg);
+  color: var(--badge-easy-text);
+}
+
+.badge-medium {
+  background-color: var(--badge-medium-bg);
+  color: var(--badge-medium-text);
+}
+
+.badge-hard {
+  background-color: var(--badge-hard-bg);
+  color: var(--badge-hard-text);
 }
 
 /* Modal */
@@ -438,11 +479,13 @@ body {
 .modal-meta {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
+  flex-wrap: wrap;
 }
 
 .meta-item {
   display: flex;
+  align-items: center;
   gap: 0.4rem;
   font-size: 0.95rem;
 }

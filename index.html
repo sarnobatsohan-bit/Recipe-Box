@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Box</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🍳</span>
+        <h1>Recipe Box</h1>
+      </div>
+      <p class="tagline">Your personal culinary sanctuary</p>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <section class="form-section">
+      <div class="section-card">
+        <h2 class="section-title">Add New Recipe</h2>
+        <form id="recipe-form" class="recipe-form">
+          <div class="form-group">
+            <label for="recipe-name">Recipe Name</label>
+            <input type="text" id="recipe-name" name="name" required placeholder="e.g. Creamy Tuscan Chicken">
+          </div>
+
+          <div class="form-group">
+            <label for="recipe-time">Cooking Time (minutes)</label>
+            <input type="number" id="recipe-time" name="cookingTime" min="1" required placeholder="e.g. 25">
+          </div>
+
+          <div class="form-group">
+            <label for="recipe-ingredients">Ingredients (one per line)</label>
+            <textarea id="recipe-ingredients" name="ingredients" rows="4" required placeholder="2 chicken breasts&#10;1 cup heavy cream&#10;2 cloves garlic"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="recipe-steps">Preparation Steps</label>
+            <textarea id="recipe-steps" name="steps" rows="4" required placeholder="Describe steps or put each step on a new line..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="save-recipe-btn">Save Recipe</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="recipes-section">
+      <div class="recipes-header">
+        <h2 class="section-title">My Recipes</h2>
+      </div>
+
+      <div id="recipes-grid" class="recipes-grid" aria-live="polite">
+        <!-- Recipe cards rendered here -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Recipe Detail Modal -->
+  <div id="recipe-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-recipe-title">
+    <div class="modal-content">
+      <header class="modal-header">
+        <h3 id="modal-recipe-title" class="modal-title"></h3>
+        <button type="button" class="btn-close" id="modal-close-btn" aria-label="Close modal">&times;</button>
+      </header>
+
+      <div class="modal-body">
+        <div class="modal-meta">
+          <span class="meta-item">
+            <span class="meta-label">Cooking Time:</span>
+            <span id="modal-recipe-time" class="meta-value"></span>
+          </span>
+        </div>
+
+        <div class="modal-section">
+          <h4>Ingredients</h4>
+          <ul id="modal-ingredients-list" class="ingredients-list"></ul>
+        </div>
+
+        <div class="modal-section">
+          <h4>Instructions</h4>
+          <ol id="modal-steps-list" class="steps-list"></ol>
+        </div>
+      </div>
+
+      <footer class="modal-footer">
+        <button type="button" id="modal-delete-btn" class="btn btn-danger">Delete Recipe</button>
+        <button type="button" id="modal-dismiss-btn" class="btn btn-secondary">Close</button>
+      </footer>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>Recipe Box &bull; Crafted with fresh ingredients &bull; Vanilla Web</p>
+  </footer>
+
+  <script src="src/main.js"></script>
+</body>
+</html>

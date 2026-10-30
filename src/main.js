@@ -89,11 +89,13 @@
   let recipes = loadRecipes();
   let currentDetailRecipeId = null;
   let searchQuery = '';
+  let timeFilter = 'any';
 
   // DOM Elements
   const recipeForm = document.getElementById('recipe-form');
   const recipesGrid = document.getElementById('recipes-grid');
   const searchInput = document.getElementById('search-input');
+  const timeFilterSelect = document.getElementById('time-filter');
   const recipeModal = document.getElementById('recipe-modal');
   const modalCloseBtn = document.getElementById('modal-close-btn');
   const modalDismissBtn = document.getElementById('modal-dismiss-btn');
@@ -136,6 +138,14 @@
           return ingredient.toLowerCase().indexOf(query) !== -1;
         });
         return matchesName || matchesIngredient;
+      });
+    }
+
+    // Filter by cooking time
+    if (timeFilter !== 'any') {
+      var maxTime = parseInt(timeFilter, 10);
+      result = result.filter(function (recipe) {
+        return recipe.cookingTime < maxTime;
       });
     }
 
@@ -296,6 +306,14 @@
   if (searchInput) {
     searchInput.addEventListener('input', function (e) {
       searchQuery = e.target.value;
+      renderRecipes();
+    });
+  }
+
+  // Time filter event listener
+  if (timeFilterSelect) {
+    timeFilterSelect.addEventListener('change', function (e) {
+      timeFilter = e.target.value;
       renderRecipes();
     });
   }

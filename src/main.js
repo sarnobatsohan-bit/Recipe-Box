@@ -318,6 +318,20 @@
     });
   }
 
+  // Random recipe picker
+  var randomBtn = document.getElementById('random-btn');
+  if (randomBtn) {
+    randomBtn.addEventListener('click', function () {
+      var visible = getVisibleRecipes();
+      if (visible.length === 0) {
+        alert('No recipes to pick from! Try changing your filters or adding a new recipe.');
+        return;
+      }
+      var idx = Math.floor(Math.random() * visible.length);
+      openModal(visible[idx].id);
+    });
+  }
+
   // Add Recipe Form Submission
   recipeForm.addEventListener('submit', function (e) {
     e.preventDefault();

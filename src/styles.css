@@ -221,6 +221,17 @@ body {
   color: #FFFFFF;
 }
 
+.btn-olive {
+  background-color: var(--olive);
+  color: #FFFFFF;
+}
+
+.btn-olive:hover {
+  background-color: var(--olive-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
 /* Recipes Section & Filters */
 .recipes-header {
   margin-bottom: 1.5rem;

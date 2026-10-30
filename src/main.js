@@ -1,4 +1,4 @@
-// Recipe Box - v1: Recipe cards with detail view
+// Recipe Box - v2: Favourite star for recipes
 (function () {
   'use strict';
 
@@ -9,6 +9,7 @@
       id: 'margherita-pizza-1',
       name: 'Classic Margherita Pizza',
       cookingTime: 25,
+      isFavorite: true,
       ingredients: [
         '1 ball pizza dough (approx. 250g)',
         '1/2 cup San Marzano tomato sauce',
@@ -30,6 +31,7 @@
       id: 'garlic-butter-pasta-2',
       name: 'Garlic Herb Butter Pasta',
       cookingTime: 15,
+      isFavorite: false,
       ingredients: [
         '250g spaghetti or linguine',
         '4 cloves fresh garlic, finely sliced',
@@ -63,14 +65,13 @@
     } catch (err) {
       console.warn('Failed to load recipes from localStorage:', err);
     }
-    // Preload sample recipes if storage is empty or fails
     saveRecipes(SAMPLE_RECIPES);
     return SAMPLE_RECIPES;
   }
 
-  function saveRecipes(recipes) {
+  function saveRecipes(recipesList) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(recipesList));
     } catch (err) {
       console.warn('Failed to save recipes to localStorage:', err);
     }
@@ -92,14 +93,37 @@
   const modalIngredientsList = document.getElementById('modal-ingredients-list');
   const modalStepsList = document.getElementById('modal-steps-list');
 
+  // Toggle Favorite
+  function toggleFavorite(recipeId) {
+    recipes = recipes.map(function (recipe) {
+      if (recipe.id === recipeId) {
+        return Object.assign({}, recipe, { isFavorite: !recipe.isFavorite });
+      }
+      return recipe;
+    });
+    saveRecipes(recipes);
+    renderRecipes();
+  }
+
+  // Get sorted recipes: favorites first
+  function getSortedRecipes() {
+    return recipes.slice().sort(function (a, b) {
+      if (a.isFavorite === b.isFavorite) {
+        return 0;
+      }
+      return a.isFavorite ? -1 : 1;
+    });
+  }
+
   // Render Recipes Grid
   function renderRecipes() {
-    // Clear recipes grid safely
     while (recipesGrid.firstChild) {
       recipesGrid.removeChild(recipesGrid.firstChild);
     }
 
-    if (recipes.length === 0) {
+    const sortedList = getSortedRecipes();
+
+    if (sortedList.length === 0) {
       const emptyMsg = document.createElement('p');
       emptyMsg.className = 'empty-state-message';
       emptyMsg.textContent = 'No recipes found. Add your first recipe above!';
@@ -107,7 +131,7 @@
       return;
     }
 
-    recipes.forEach(function (recipe) {
+    sortedList.forEach(function (recipe) {
       const card = document.createElement('article');
       card.className = 'recipe-card';
       card.setAttribute('tabindex', '0');
@@ -122,6 +146,28 @@
       title.className = 'card-title';
       title.textContent = recipe.name;
       header.appendChild(title);
+
+      // Favorite button
+      const favBtn = document.createElement('button');
+      favBtn.type = 'button';
+      favBtn.className = recipe.isFavorite ? 'btn-fav active' : 'btn-fav';
+      favBtn.setAttribute('aria-label', recipe.isFavorite ? 'Remove from favorites' : 'Add to favorites');
+      favBtn.textContent = recipe.isFavorite ? '★' : '☆';
+
+      favBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleFavorite(recipe.id);
+      });
+
+      favBtn.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleFavorite(recipe.id);
+        }
+      });
+
+      header.appendChild(favBtn);
       card.appendChild(header);
 
       // Card Meta
@@ -244,6 +290,7 @@
       id: 'recipe-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6),
       name: name,
       cookingTime: cookingTime,
+      isFavorite: false,
       ingredients: ingredients,
       steps: steps
     };

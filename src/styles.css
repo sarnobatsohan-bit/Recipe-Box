@@ -13,6 +13,7 @@
   --olive-hover: #445625;
   --olive-light: #EEF3E6;
   
+  --gold: #E5A100;
   --text-primary: #292421;
   --text-secondary: #6B625B;
   --text-muted: #8C8279;
@@ -252,6 +253,26 @@ body {
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.3;
+  flex: 1;
+}
+
+.btn-fav {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem;
+  color: var(--border-subtle);
+  transition: transform 0.2s, color 0.2s;
+}
+
+.btn-fav:hover {
+  transform: scale(1.2);
+}
+
+.btn-fav.active {
+  color: var(--gold);
 }
 
 .card-meta {

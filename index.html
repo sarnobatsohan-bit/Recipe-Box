@@ -52,7 +52,15 @@
 
     <section class="recipes-section">
       <div class="recipes-header">
-        <h2 class="section-title">My Recipes</h2>
+        <div class="recipes-title-row">
+          <h2 class="section-title">My Recipes</h2>
+        </div>
+        <div class="filter-bar">
+          <div class="search-box">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input type="search" id="search-input" placeholder="Search by recipe or ingredient..." aria-label="Search recipes">
+          </div>
+        </div>
       </div>
 
       <div id="recipes-grid" class="recipes-grid" aria-live="polite">

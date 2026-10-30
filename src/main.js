@@ -1,4 +1,4 @@
-// Recipe Box - v2: Favourite star for recipes
+// Recipe Box - v3: Search by recipe name or ingredient
 (function () {
   'use strict';
 
@@ -80,10 +80,12 @@
   // Application State
   let recipes = loadRecipes();
   let currentDetailRecipeId = null;
+  let searchQuery = '';
 
   // DOM Elements
   const recipeForm = document.getElementById('recipe-form');
   const recipesGrid = document.getElementById('recipes-grid');
+  const searchInput = document.getElementById('search-input');
   const recipeModal = document.getElementById('recipe-modal');
   const modalCloseBtn = document.getElementById('modal-close-btn');
   const modalDismissBtn = document.getElementById('modal-dismiss-btn');
@@ -105,9 +107,24 @@
     renderRecipes();
   }
 
-  // Get sorted recipes: favorites first
-  function getSortedRecipes() {
-    return recipes.slice().sort(function (a, b) {
+  // Filter and sort recipes: favorites first, filtered by search query
+  function getVisibleRecipes() {
+    let result = recipes.slice();
+
+    // Filter by search query (name or ingredients, case-insensitive)
+    const query = searchQuery.trim().toLowerCase();
+    if (query) {
+      result = result.filter(function (recipe) {
+        const matchesName = recipe.name.toLowerCase().indexOf(query) !== -1;
+        const matchesIngredient = recipe.ingredients.some(function (ingredient) {
+          return ingredient.toLowerCase().indexOf(query) !== -1;
+        });
+        return matchesName || matchesIngredient;
+      });
+    }
+
+    // Sort: favorites first
+    return result.sort(function (a, b) {
       if (a.isFavorite === b.isFavorite) {
         return 0;
       }
@@ -121,17 +138,17 @@
       recipesGrid.removeChild(recipesGrid.firstChild);
     }
 
-    const sortedList = getSortedRecipes();
+    const visibleRecipes = getVisibleRecipes();
 
-    if (sortedList.length === 0) {
-      const emptyMsg = document.createElement('p');
+    if (visibleRecipes.length === 0) {
+      const emptyMsg = document.createElement('div');
       emptyMsg.className = 'empty-state-message';
-      emptyMsg.textContent = 'No recipes found. Add your first recipe above!';
+      emptyMsg.textContent = 'No recipes found';
       recipesGrid.appendChild(emptyMsg);
       return;
     }
 
-    sortedList.forEach(function (recipe) {
+    visibleRecipes.forEach(function (recipe) {
       const card = document.createElement('article');
       card.className = 'recipe-card';
       card.setAttribute('tabindex', '0');
@@ -248,6 +265,14 @@
     saveRecipes(recipes);
     closeModal();
     renderRecipes();
+  }
+
+  // Search input event listener
+  if (searchInput) {
+    searchInput.addEventListener('input', function (e) {
+      searchQuery = e.target.value;
+      renderRecipes();
+    });
   }
 
   // Add Recipe Form Submission
